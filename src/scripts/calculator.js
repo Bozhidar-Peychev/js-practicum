@@ -1,42 +1,52 @@
 function getHistory() {
   return document.getElementById("history-value").innerText;
 }
+
 function getOutput() {
   return document.getElementById("output-value").innerText;
 }
-function printHistory(num) {
+
+function getNumber() {
+  return document.getElementsByClassName("number");
+}
+
+function getOperator() {
+  return document.getElementsByClassName("operator");
+}
+
+function updateHistoryField(num) {
   document.getElementById("history-value").innerText = num;
 }
-function printOutput(num) {
+
+function updateOutputField(num) {
   if (num == "") {
     document.getElementById("output-value").innerText = num;
   } else {
     document.getElementById("output-value").innerText = getFormattedNumber(num);
   }
 }
+
 function getFormattedNumber(num) {
   if (num == "-") {
     return "";
   }
-  let n = Number(num);
-  let value = n.toLocaleString("en");
-  return value;
+  return Number(num).toLocaleString("en");
 }
+
 function reverseNumberFormat(num) {
   return Number(num.replace(/,/g, ""));
 }
-let operator = document.getElementsByClassName("operator");
-for (let i = 0; i < operator.length; i++) {
-  operator[i].addEventListener("click", function () {
+
+for (let index = 0; index < getOperator().length; index++) {
+  getOperator()[index].addEventListener("click", function () {
     if (this.id == "clear") {
-      printHistory("");
-      printOutput("");
+      updateHistoryField("");
+      updateOutputField("");
     } else if (this.id == "backspace") {
-      var output = reverseNumberFormat(getOutput()).toString();
-      if (output) {
-        //if output has a value
-        output = output.substr(0, output.length - 1);
-        printOutput(output);
+      let outputForDelete = reverseNumberFormat(getOutput()).toString();
+      if (outputForDelete) {
+        outputForDelete = outputForDelete.substr(0, outputForDelete.length - 1);
+        updateOutputField(outputForDelete);
       }
     } else {
       let output = getOutput();
@@ -51,24 +61,24 @@ for (let i = 0; i < operator.length; i++) {
         history = history + output;
         if (this.id == "=") {
           let result = eval(history);
-          printOutput(result);
-          printHistory("");
+          updateOutputField(result);
+          updateHistoryField("");
         } else {
           history = history + this.id;
-          printHistory(history);
-          printOutput("");
+          updateHistoryField(history);
+          updateOutputField("");
         }
       }
     }
   });
 }
-let number = document.getElementsByClassName("number");
-for (let i = 0; i < number.length; i++) {
-  number[i].addEventListener("click", function () {
+
+for (let index = 0; index < getNumber().length; index++) {
+  getNumber()[index].addEventListener("click", function () {
     let output = reverseNumberFormat(getOutput());
     if (output != NaN) {
       output = output + this.id;
-      printOutput(output);
+      updateOutputField(output);
     }
   });
 }
